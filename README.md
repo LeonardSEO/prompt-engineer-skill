@@ -60,27 +60,39 @@ These stay out of the main skill file so they only load into context when a spec
 
 ## Install
 
-### Claude Code
+This is a plain [Agent Skills spec](https://agentskills.io/specification) folder — `SKILL.md` at the root, everything else in `references/`. It works with any agent that reads that spec: Claude Code, Codex, Cursor, OpenCode, and [70+ others](https://github.com/vercel-labs/skills).
 
-Drop the folder into your skills directory. Globally (available in every project):
-
-```bash
-git clone https://github.com/LeonardSEO/prompt-engineer-skill.git ~/.claude/skills/prompt-engineer
-```
-
-Or scoped to a single project:
+### Option A — the `skills` CLI (recommended, agent-agnostic)
 
 ```bash
-git clone https://github.com/LeonardSEO/prompt-engineer-skill.git .claude/skills/prompt-engineer
+npx skills add https://github.com/LeonardSEO/prompt-engineer-skill
 ```
 
-### Any Agent Skills-compatible agent, via the `skills` CLI
+The CLI detects which agents you have installed and asks which one(s) to target — or specify explicitly:
 
 ```bash
-npx skills add https://github.com/LeonardSEO/prompt-engineer-skill -g -a claude-code
+npx skills add https://github.com/LeonardSEO/prompt-engineer-skill -a claude-code   # Claude Code
+npx skills add https://github.com/LeonardSEO/prompt-engineer-skill -a codex        # Codex
+npx skills add https://github.com/LeonardSEO/prompt-engineer-skill -a cursor       # Cursor
 ```
 
-Drop `-g` to install into the current project instead of your user directory, and swap `-a claude-code` for `-a codex`, `-a cursor`, etc. depending on your agent. See [vercel-labs/skills](https://github.com/vercel-labs/skills) for the full CLI reference.
+Add `-g` to install into your user directory (available in every project) instead of just the current one. See [vercel-labs/skills](https://github.com/vercel-labs/skills) for the full CLI reference.
+
+### Option B — clone directly into an agent's skills folder
+
+Every agent that supports skills reads them from a predictable path. Clone into whichever one applies:
+
+| Agent | User-wide | Project-scoped |
+|---|---|---|
+| Claude Code | `~/.claude/skills/` | `.claude/skills/` |
+| Codex | `~/.codex/skills/` (or `$CODEX_HOME/skills/`) | `.agents/skills/` or `.codex/skills/` |
+
+```bash
+git clone https://github.com/LeonardSEO/prompt-engineer-skill.git ~/.claude/skills/prompt-engineer   # Claude Code, user-wide
+git clone https://github.com/LeonardSEO/prompt-engineer-skill.git ~/.codex/skills/prompt-engineer    # Codex, user-wide
+```
+
+For other agents, check that agent's docs for where it looks for skills, then clone this repo there.
 
 ## Repo layout
 
