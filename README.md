@@ -2,7 +2,7 @@
 
 # 🧠 Prompt Engineer
 
-**An agent skill that turns weak, ambiguous, or overcomplicated prompts into clear, structured, production-ready ones.**
+**An agent skill that turns weak, ambiguous, or overcomplicated prompts into clear, usable, task-appropriate ones.**
 
 Drop it into Claude Code, Codex, or any agent that supports the [Agent Skills spec](https://agentskills.io/specification) — no setup beyond copying a folder.
 
@@ -22,31 +22,28 @@ Point an agent at it and ask it to write or improve a prompt. It will:
 
 | Situation | What happens |
 |---|---|
-| You hand it an existing prompt | It preserves the intent, restructures it into the output contract below, and fixes what's actually broken |
+| You hand it an existing prompt | It preserves intent and required formats, keeps working parts, and fixes concrete weaknesses |
 | You describe a new prompt you need | It writes one directly if the goal is clear enough |
 | The goal is too vague | It asks **one** focused clarification question — never a checklist |
-| You ask for a critique | It explains what's wrong and offers a stronger version |
+| You ask for a critique | It explains concrete issues and illustrates fixes when useful |
 
-Every result comes back as a single, pasteable **XML-tagged prompt** — never left in whatever format the input happened to use. That's a hard rule, not a style preference: see [`SKILL.md`](SKILL.md#output-contract) for why.
+Results follow the requested format and preserve integration contracts. Otherwise, the skill chooses prose, Markdown, or XML according to the prompt's needs. Standalone prompts come in one pasteable code block by default; critiques and repository edits use the appropriate delivery format.
 
-## Why XML tags, and why "always"
+## Structure that serves the task
 
-Untagged prompts drift: instructions blur into context, examples get mistaken for requirements, and models default to filling gaps with their own judgment instead of yours. The skill enforces one consistent shape —
+A short prompt does not need a template. Longer prompts can use labeled sections or XML tags to distinguish instructions, context, sources, and examples. The skill treats formatting as a choice and keeps the requested response schema separate from the prompt's own presentation. See [`SKILL.md`](SKILL.md#output-contract) for the delivery rules.
 
-```
-<role> <objective> <task> <context> <success_criteria> <constraints>
-<source_policy> <tool_policy> <reasoning_policy> <ambiguity_policy>
-<output_format> <examples> <quality_check>
-```
+## GPT-6 Astra update
 
-— omitting tags that don't apply, but never falling back to plain prose just because the input prompt was already prose. This is called out explicitly in the skill as a non-negotiable rule, precisely because "preserve the original structure" is the natural failure mode to guard against.
+The Astra reference covers completion and approval boundaries, verification scope, writing style, and API migration caveats. The shared skill now uses a narrower discovery description, loads only relevant model guidance, and removes unconditional XML conversion and fixed example counts. These are editorial changes based on official guidance; they are not a claim of measured performance improvement.
 
 ## Built-in model tuning
 
-Prompting patterns that work well for one model family can misfire on another — different defaults for verbosity, tool-use triggering, reasoning depth, and instruction literalism. Rather than guessing, the skill ships with condensed, sourced reference docs for the current model generations and loads the right one only when it's relevant:
+Prompting patterns that work well for one model family can misfire on another — different defaults for verbosity, tool-use triggering, reasoning depth, and instruction literalism. Rather than guessing, the skill ships with sourced reference docs for supported model targets and loads the right one only when it's relevant:
 
 | Model family | Reference |
 |---|---|
+| GPT-6 Astra | [`references/gpt-6-astra.md`](references/gpt-6-astra.md) |
 | Claude Opus 5 | [`references/claude-opus-5.md`](references/claude-opus-5.md) |
 | Claude Sonnet 5 | [`references/claude-sonnet-5.md`](references/claude-sonnet-5.md) |
 | Claude Fable 5 / Mythos 5 | [`references/claude-fable-5.md`](references/claude-fable-5.md) |
@@ -104,6 +101,7 @@ prompt-engineer/
     ├── claude-sonnet-5.md
     ├── claude-fable-5.md
     ├── claude-best-practices.md
+    ├── gpt-6-astra.md
     ├── gpt-5.6.md
     ├── gpt-5.6-model-guide.md
     ├── gpt-5.5.md
